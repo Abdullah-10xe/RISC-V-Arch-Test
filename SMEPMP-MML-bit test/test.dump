@@ -1,0 +1,85 @@
+
+test.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text.init:
+
+80000000 <_start>:
+80000000:	0200006f          	j	80000020 <main>
+
+80000004 <trap_vector>:
+80000004:	34202f73          	csrr	t5,mcause
+80000008:	00000013          	nop
+8000000c:	00000013          	nop
+80000010:	00000013          	nop
+80000014:	00000013          	nop
+80000018:	00000013          	nop
+8000001c:	0a80006f          	j	800000c4 <write_tohost>
+
+80000020 <main>:
+80000020:	00400293          	li	t0,4
+80000024:	74729073          	csrw	0x747,t0
+80000028:	00003297          	auipc	t0,0x3
+8000002c:	fd828293          	addi	t0,t0,-40 # 80003000 <trap_handler>
+80000030:	ffc00313          	li	t1,-4
+80000034:	0062f2b3          	and	t0,t0,t1
+80000038:	30529073          	csrw	mtvec,t0
+8000003c:	800002b7          	lui	t0,0x80000
+80000040:	0022d293          	srli	t0,t0,0x2
+80000044:	1ff00313          	li	t1,511
+80000048:	00536333          	or	t1,t1,t0
+8000004c:	3b031073          	csrw	pmpaddr0,t1
+80000050:	800012b7          	lui	t0,0x80001
+80000054:	0022d293          	srli	t0,t0,0x2
+80000058:	1ff00313          	li	t1,511
+8000005c:	00536333          	or	t1,t1,t0
+80000060:	3b131073          	csrw	pmpaddr1,t1
+80000064:	800022b7          	lui	t0,0x80002
+80000068:	0022d293          	srli	t0,t0,0x2
+8000006c:	1ff00313          	li	t1,511
+80000070:	00536333          	or	t1,t1,t0
+80000074:	3b231073          	csrw	pmpaddr2,t1
+80000078:	800032b7          	lui	t0,0x80003
+8000007c:	0022d293          	srli	t0,t0,0x2
+80000080:	1ff00313          	li	t1,511
+80000084:	00536333          	or	t1,t1,t0
+80000088:	3b331073          	csrw	pmpaddr3,t1
+8000008c:	9c99a2b7          	lui	t0,0x9c99a
+80000090:	a9c28293          	addi	t0,t0,-1380 # 9c999a9c <_end+0x1c995a8c>
+80000094:	3a029073          	csrw	pmpcfg0,t0
+80000098:	00500293          	li	t0,5
+8000009c:	74729073          	csrw	0x747,t0
+800000a0:	02800513          	li	a0,40
+800000a4:	75d0106f          	j	80002000 <only_read_permission>
+800000a8:	00000013          	nop
+800000ac:	00000013          	nop
+800000b0:	00000013          	nop
+800000b4:	00000013          	nop
+800000b8:	00000013          	nop
+800000bc:	00000013          	nop
+
+800000c0 <test_pass>:
+800000c0:	0040006f          	j	800000c4 <write_tohost>
+
+800000c4 <write_tohost>:
+800000c4:	00100193          	li	gp,1
+800000c8:	00001f17          	auipc	t5,0x1
+800000cc:	f23f2c23          	sw	gp,-200(t5) # 80001000 <tohost>
+800000d0:	ff5ff06f          	j	800000c4 <write_tohost>
+800000d4:	00000013          	nop
+800000d8:	00000013          	nop
+800000dc:	00000013          	nop
+
+Disassembly of section .text:
+
+80002000 <only_read_permission>:
+80002000:	02800513          	li	a0,40
+80002004:	8bcfe06f          	j	800000c0 <test_pass>
+
+Disassembly of section .handler:
+
+80003000 <trap_handler>:
+80003000:	9c9a2537          	lui	a0,0x9c9a2
+80003004:	a9c50513          	addi	a0,a0,-1380 # 9c9a1a9c <_end+0x1c99da8c>
+80003008:	3a051073          	csrw	pmpcfg0,a0
+8000300c:	30200073          	mret
